@@ -11,22 +11,21 @@
  */
 class Solution {
 public:
-    void dfs(TreeNode* node, vector<int> &ans){
-        if(node == NULL)return;
-
-        // Left
-        dfs(node->left,ans);
-
-        // Right
-        dfs(node->right, ans);
-
-        // Root
-        ans.push_back(node->val);
-    }
-
     vector<int> postorderTraversal(TreeNode* root) {
         vector<int> ans;
-        dfs(root,ans);
+        stack<TreeNode*> st;
+
+        st.push(root);
+        while(!st.empty()){
+            TreeNode* temp=st.top();
+            st.pop();
+            if(temp != NULL){
+                ans.push_back(temp->val);
+                st.push(temp->left);
+                st.push(temp->right);
+            }          
+        }
+        reverse(ans.begin(),ans.end());
         return ans;
     }
 };
