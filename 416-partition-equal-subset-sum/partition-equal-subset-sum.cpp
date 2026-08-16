@@ -1,18 +1,5 @@
 class Solution {
 public:
-    bool dfs(vector<int>& nums, int idx, int sum, vector<vector<int>>& dp) {
-        if (sum == 0) return true;
-        if (idx == nums.size() || sum < 0) return false;
-
-        if (dp[idx][sum] != -1)
-            return dp[idx][sum];
-
-        bool take = dfs(nums, idx + 1, sum - nums[idx], dp);
-        bool notTake = dfs(nums, idx + 1, sum, dp);
-
-        return dp[idx][sum] = take || notTake;
-    }
-
     bool canPartition(vector<int>& nums) {
         int total = 0;
 
@@ -23,12 +10,27 @@ public:
             return false;
 
         int target = total / 2;
+        int n=nums.size();
 
         vector<vector<int>> dp(
-            nums.size(),
-            vector<int>(target + 1, -1)
+            n+1,
+            vector<int>(target + 1, false)
         );
 
-        return dfs(nums, 0, target, dp);
+        for(int i=0;i<n+1;i++){
+            dp[i][0]=true;
+        }
+
+        for(int i=1;i<n+1;i++){
+            for(int s=1;s<target+1;s++){
+                dp[i][s] = dp[i-1][s];
+
+                if(s>=nums[i-1]){
+                    dp[i][s]=dp[i][s] || dp[i-1][s-nums[i-1]];
+                }
+            }
+        }
+
+        return dp[n][target];
     }
 };
