@@ -13,12 +13,11 @@ public:
         int n = nums.size();
 
         vector<int> prev(target + 1, false);
-        vector<int> curr(target + 1, false);
 
         prev[0] = true;
-        curr[0] = true;
 
         for (int i = 1; i < n + 1; i++) {
+            vector<int> curr(target + 1, false);
             for (int s = 1; s < target + 1; s++) {
                 curr[s] = prev[s];
 
