@@ -1,21 +1,34 @@
 class Solution {
 public:
-    bool canPartition(vector<int>& nums) {
-        const int sum = accumulate(nums.begin(), nums.end(), 0);
-        if (sum % 2 == 1)
-            return false;
-        return knapsack(nums, sum / 2);
+    bool dfs(vector<int>& nums, int idx, int sum, vector<vector<int>>& dp) {
+        if (sum == 0) return true;
+        if (idx == nums.size() || sum < 0) return false;
+
+        if (dp[idx][sum] != -1)
+            return dp[idx][sum];
+
+        bool take = dfs(nums, idx + 1, sum - nums[idx], dp);
+        bool notTake = dfs(nums, idx + 1, sum, dp);
+
+        return dp[idx][sum] = take || notTake;
     }
 
-private:
-    bool knapsack(const vector<int>& nums, int subsetSum) {
-        vector<bool> dp(subsetSum + 1);
-        dp[0] = true;
+    bool canPartition(vector<int>& nums) {
+        int total = 0;
 
-        for (const int num : nums)
-            for (int i = subsetSum; i >= num; --i)
-                dp[i] = dp[i] || dp[i - num];
+        for (int x : nums)
+            total += x;
 
-        return dp[subsetSum];
+        if (total % 2)
+            return false;
+
+        int target = total / 2;
+
+        vector<vector<int>> dp(
+            nums.size(),
+            vector<int>(target + 1, -1)
+        );
+
+        return dfs(nums, 0, target, dp);
     }
 };
