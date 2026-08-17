@@ -2,25 +2,28 @@ class Solution {
 public:
     int coinChange(vector<int>& coins, int amount) {
         int n = coins.size();
-        vector<int> prev(amount + 1, INT_MAX);
-        prev[0] = 0;
 
-        for (int amt = 1; amt < amount + 1; amt++){
-            if(amt%coins[0]==0){
-                prev[amt]=amt/coins[0];
+        vector<int> dp(amount + 1, INT_MAX);
+        dp[0] = 0;
+
+        // Base case: only coins[0]
+        for (int amt = 1; amt <= amount; amt++) {
+            if (amt % coins[0] == 0) {
+                dp[amt] = amt / coins[0];
             }
         }
 
         for (int i = 1; i < n; i++) {
-            vector<int> curr(amount + 1, INT_MAX);
-            curr[0] = 0;
-            for (int amt = 1; amt < amount + 1; amt++) {
-                curr[amt] = prev[amt];
-                if (amt >= coins[i] && curr[amt - coins[i]] != INT_MAX)
-                    curr[amt] = min(curr[amt], 1 + curr[amt - coins[i]]);
+            for (int amt = 1; amt <= amount; amt++) {
+                // take
+                if (amt >= coins[i] &&
+                    dp[amt - coins[i]] != INT_MAX) {
+
+                    dp[amt] = min(dp[amt],1 + dp[amt - coins[i]]);
+                }
             }
-            prev=curr;
         }
-        return prev[amount]==INT_MAX?-1:prev[amount];
+
+        return dp[amount] == INT_MAX ? -1 : dp[amount];
     }
 };
