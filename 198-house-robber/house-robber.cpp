@@ -11,7 +11,7 @@ public:
         return dp[idx] = max(take,notTake);
     }
     int rob(vector<int>& nums) {
-        vector<int> dp(nums.size()+1,-1);
+        vector<int> dp(nums.size(),-1);
         return dfs(nums,0,dp);
     }
 };
