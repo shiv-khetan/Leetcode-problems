@@ -1,17 +1,18 @@
 class Solution {
 public:
-    int dfs(vector<int>& nums,int idx,vector<int>& dp){
-        if(idx>=nums.size())return 0;
-
-        if(dp[idx]!=-1)return dp[idx];
-
-        int take = nums[idx] + dfs(nums, idx+2, dp);
-        int notTake = dfs(nums,idx+1,dp);
-
-        return dp[idx] = max(take,notTake);
-    }
     int rob(vector<int>& nums) {
-        vector<int> dp(nums.size(),-1);
-        return dfs(nums,0,dp);
+        int n = nums.size();
+        vector<int> dp(n,-1);
+
+        dp[0]=nums[0];
+        if(n>1)dp[1]=max(nums[0],nums[1]);
+
+        for(int i=2; i<n; i++){
+            int take = nums[i] + dp[i-2];
+            int notTake = dp[i-1];
+            dp[i]=max(take,notTake);
+        }
+
+        return dp[n-1];
     }
 };
