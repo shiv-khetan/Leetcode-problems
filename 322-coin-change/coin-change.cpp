@@ -1,30 +1,26 @@
 class Solution {
 public:
-    int dfs(vector<int>& coins, int idx, int amt, vector<vector<int>>& dp) {
-        if (amt == 0)
-            return 0;
-
-        if (idx == coins.size() || amt < 0)
-            return INT_MAX;
-
-        if (dp[idx][amt] != -1)
-            return dp[idx][amt];
-
-        // take current coin
-        int take = dfs(coins, idx, amt - coins[idx], dp);
-
-        if (take != INT_MAX)
-            take = 1 + take;
-
-        // skip current coin
-        int skip = dfs(coins, idx + 1, amt, dp);
-
-        return dp[idx][amt] = min(take, skip);
-    }
-
     int coinChange(vector<int>& coins, int amount) {
-        vector<vector<int>> dp(coins.size(), vector<int>(amount + 1, -1));
-        int ans = dfs(coins, 0, amount, dp);
-        return ans == INT_MAX ? -1 : ans;
+        int n = coins.size();
+        vector<vector<int>> dp(n, vector<int>(amount + 1, INT_MAX));
+
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = 0;
+        }
+
+        for (int amt = 1; amt < amount + 1; amt++){
+            if(amt%coins[0]==0){
+                dp[0][amt]=amt/coins[0];
+            }
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int amt = 1; amt < amount + 1; amt++) {
+                dp[i][amt] = dp[i - 1][amt];
+                if (amt >= coins[i] && dp[i][amt - coins[i]] != INT_MAX)
+                    dp[i][amt] = min(dp[i][amt], 1 + dp[i][amt - coins[i]]);
+            }
+        }
+        return dp[n-1][amount]==INT_MAX?-1:dp[n-1][amount];
     }
 };
