@@ -4,7 +4,6 @@ public:
         vector<vector<int>> adj(numCourses);
         vector<int> indegree(numCourses, 0);
         int v = numCourses;
-        stack<int> st;
 
         for (int i = 0; i < prerequisites.size(); i++) {
             adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
@@ -20,10 +19,12 @@ public:
             }
         }
 
+        vector<int> ans;
+
         while (!q.empty()) {
             int t = q.front();
             q.pop();
-            st.push(t);
+            ans.push_back(t);
 
             for (int i : adj[t]) {
                 indegree[i]--;
@@ -34,12 +35,7 @@ public:
             }
         }
 
-        vector<int> ans;
-        while (!st.empty()) {
-            ans.push_back(st.top());
-            st.pop();
-        }
         if(v!=0)return {};
-        return {ans.rbegin(), ans.rend()};
+        return ans;
     }
 };
