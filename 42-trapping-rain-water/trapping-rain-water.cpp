@@ -2,20 +2,21 @@ class Solution {
 public:
     int trap(vector<int>& height) {
         int l = 0, r = height.size() - 1;
-        int lm = 0, rm = 0;
-        int sum = 0;
+        int lmax = 0, rmax = 0;
+        int ans = 0;
 
-        while (l < r) {
+        while (l <= r) {
             if (height[l] <= height[r]) {
-                lm = max(lm, height[l]);
-                sum += lm - height[l];
+                lmax = max(lmax, height[l]);
+                ans += lmax - height[l];
                 l++;
             } else {
-                rm = max(rm, height[r]);
-                sum += rm - height[r];
+                rmax = max(rmax, height[r]);
+                ans += rmax - height[r];
                 r--;
             }
         }
-        return sum;
+
+        return ans;
     }
 };
